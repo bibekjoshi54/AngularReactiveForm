@@ -21,6 +21,8 @@ function ratingRange(min: number, max: number): ValidatorFn{
     return null; };
 }
 
+
+
 @Component({
     selector: 'my-signup',
     templateUrl: './app/customers/customer.component.html'
@@ -29,16 +31,23 @@ export class CustomerComponent  implements OnInit{
     customerForm: FormGroup;
     customer: Customer= new Customer();
     emailMessage: string;
-
+    buildAddress() : FormGroup {
+            return this.fb.group({
+                    addressType : 'home',
+                    street1 : '',
+                    street2 : '',
+                    city : '',
+                    state : '',
+                    zip : ''
+            });
+        }
     private validateMessages = {
         required : 'Please enter your email address.',
-        pattern: 'Please enter the valid email address.'
-    };
+        pattern: 'Please enter the valid email address.'};
 
     constructor(private fb: FormBuilder){}
 
     ngOnInit(): void {
-
         this.customerForm = this.fb.group({
             firstName : ['', [Validators.required, Validators.minLength(3)]],
             lastName: ['', [Validators.required, Validators.maxLength(50)]],
@@ -50,21 +59,16 @@ export class CustomerComponent  implements OnInit{
             phone : '',
             rating: ['', ratingRange(1, 5)],
             notification : 'email',
-             adresses : this.fb.group({
-            addressType : 'home',
-            street1 : '',
-            street2 : '',
-            city : '',
-            state : '',
-            zip : ''
-            })
+             adresses : this.buildAddress()
         });
 
         this.customerForm.get('notification').valueChanges.subscribe(value => this.setNotification(value))
-       const  emailControl = this.customerForm.get('emailGroup.email');
+        const  emailControl = this.customerForm.get('emailGroup.email');
 
        emailControl.valueChanges.debounceTime(1000).subscribe(value => this.setMessage(emailControl));
     }
+
+
     populateTestData (): void {
         this.customerForm.patchValue({
             firstName : 'John',
@@ -73,10 +77,13 @@ export class CustomerComponent  implements OnInit{
             sendCatalog : false
         });
     }
+
+
     save() {
         console.log(this.customerForm);
         console.log('Saved: ' + JSON.stringify(this.customerForm.value));
     }
+
 
     setNotification(notifyVia: string): void{ 
         const phoneControl  = this.customerForm.get('phone');
@@ -88,6 +95,7 @@ export class CustomerComponent  implements OnInit{
         phoneControl.updateValueAndValidity();
     }
 
+
     setMessage(c: AbstractControl): void {
         console.log('Selected')
         this.emailMessage = '';
@@ -96,4 +104,5 @@ export class CustomerComponent  implements OnInit{
             .map(key => this.validateMessages[key]).join(' ');
         }
     }
+
 }
