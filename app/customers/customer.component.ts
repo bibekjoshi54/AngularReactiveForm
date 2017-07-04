@@ -32,6 +32,9 @@ export class CustomerComponent  implements OnInit{
     customer: Customer= new Customer();
     emailMessage: string;
 
+    addAddress() : void {
+        this.addresses.push(this.buildAddress());
+    }
     get addresses() : FormArray{
         return <FormArray>this.customerForm.get('addresses');
     }

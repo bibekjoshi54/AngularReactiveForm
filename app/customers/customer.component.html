@@ -166,8 +166,11 @@
                         </label>
                     </div>
                 </div>
-                <div *ngIf="customerForm.get('sendCatalog').value">
-                    <div formArrayName="addresses" *ngFor="let address of addresses.controls; let i=index">
+                <div *ngIf="customerForm.get('sendCatalog').value">                   
+                    <button type="button" class="btn btn-primary"
+                     [disabled] = "!addresses.valid"
+                      (click) = 'addAddress()'>Add Another Address</button>
+                <div formArrayName="addresses" *ngFor="let address of addresses.controls; let i=index">
                         <div [formGroupName] = "i">
                             <div class="form-group" >
                                 <label class="col-md-2 control-label">Address Type</label>
