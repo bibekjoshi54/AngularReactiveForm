@@ -1,2 +1,4 @@
 
 node_modules
+*.component.js.map
+*.component.js
