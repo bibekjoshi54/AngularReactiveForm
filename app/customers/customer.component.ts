@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl, ValidatorFn, FormArray } from '@angular/forms';
 import { Customer } from './customer';
 import 'rxjs/add/operator/debounceTime';
 
@@ -31,6 +31,12 @@ export class CustomerComponent  implements OnInit{
     customerForm: FormGroup;
     customer: Customer= new Customer();
     emailMessage: string;
+
+    get addresses() : FormArray{
+        return <FormArray>this.customerForm.get('addresses');
+    }
+
+
     buildAddress() : FormGroup {
             return this.fb.group({
                     addressType : 'home',
@@ -59,7 +65,7 @@ export class CustomerComponent  implements OnInit{
             phone : '',
             rating: ['', ratingRange(1, 5)],
             notification : 'email',
-             adresses : this.buildAddress()
+             addresses : this.fb.array([this.buildAddress()])
         });
 
         this.customerForm.get('notification').valueChanges.subscribe(value => this.setNotification(value))
